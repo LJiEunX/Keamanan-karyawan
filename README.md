@@ -1,62 +1,70 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+---
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Sistem Keamanan Informasi Karyawan
 
-## About Laravel
+Ini adalah sebuah sistem manajemen data karyawan berbasis web yang dibangun dalam rangka memenuhi tugas mata kuliah Keamanan Informasi. Sistem ini berfokus pada **perlindungan data sensitif karyawan** menggunakan framework Laravel dan penyimpanan data di database lokal MySQL melalui phpMyAdmin.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Gambaran Umum
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Aplikasi ini mengelola informasi karyawan lengkap dalam sebuah perusahaan, mencakup:
 
-## Learning Laravel
+* **Identitas Karyawan**: Nama, Nomor Induk Karyawan (NIK), Jabatan, Divisi.
+* **Detail Kontak**: Email, Nomor Telepon, Alamat.
+* **Informasi Pekerjaan**: Status Kerja, Tanggal Bergabung, Lokasi Kerja.
+* **Gaji dan Tunjangan**: Gaji Pokok, Bonus, Potongan, Total Gaji.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Fokus utama pengembangan sistem ini adalah pada **perlindungan data sensitif dan rahasia**, khususnya informasi gaji dan identitas pribadi, yang rentan terhadap penyalahgunaan.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Teknologi dan Alat yang Digunakan
 
-## Laravel Sponsors
+* **Laravel 12**: Kerangka kerja backend PHP.
+* **phpMyAdmin**: Alat pengelolaan database MySQL lokal (localhost).
+* **Blade Template**: Sistem templating untuk tampilan frontend.
+* **Middleware Laravel**: Digunakan untuk manajemen autentikasi dan otorisasi.
+* **Enkripsi Laravel**: Fitur bawaan (`Crypt` dan `Hash`) untuk perlindungan data sensitif.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Aspek Keamanan yang Diimplementasikan
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Autentikasi dan Otorisasi
 
-## Contributing
+* **Sistem Login**: Menggunakan paket Laravel Breeze atau Laravel Jetstream untuk otentikasi pengguna yang aman.
+* **Akses Terverifikasi**: Hanya pengguna yang telah terverifikasi dan masuk ke sistem yang dapat mengakses halaman manajemen data karyawan.
+* **Role-Based Access Control (RBAC)**: Setiap pengguna dibatasi aksesnya berdasarkan peran (contoh: admin, HR, viewer) untuk memastikan mereka hanya bisa melihat dan memanipulasi data sesuai dengan wewenang mereka.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Validasi dan Sanitasi Input
 
-## Code of Conduct
+* **Laravel FormRequest**: Seluruh form input divalidasi secara ketat menggunakan FormRequest untuk mencegah serangan umum seperti **SQL Injection** dan **Cross-Site Scripting (XSS)**.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Enkripsi Data Sensitif
 
-## Security Vulnerabilities
+* **`Laravel Crypt::encrypt()`**: Data sangat sensitif seperti informasi gaji dan identitas pribadi karyawan dienkripsi terlebih dahulu sebelum disimpan ke database.
+* **Dekripsi Sesuai Kebutuhan**: Data yang dienkripsi hanya akan didekripsi saat benar-benar dibutuhkan untuk ditampilkan atau diproses dalam aplikasi.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Keamanan Database
 
-## License
+* **`.env` File**: Kredensial database tidak disimpan langsung dalam kode aplikasi, melainkan dikelola secara terpisah dalam file `.env` Laravel dengan izin akses yang terbatas.
+* **Hak Akses Minimal**: Aplikasi ini menggunakan user database dengan hak akses minimal yang hanya diperlukan untuk operasi aplikasi, bukan sebagai user `root`, untuk mengurangi risiko kebocoran.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# Keamanan-karyawan
+---
+
+## Prinsip Keamanan Informasi (CIA Triad)
+
+Dengan pendekatan ini, sistem yang dikembangkan tidak hanya menjalankan fungsi manajemen data karyawan, tetapi juga memenuhi prinsip dasar Keamanan Informasi, yaitu:
+
+* **Kerahasiaan (Confidentiality)**: Melindungi data dari akses yang tidak sah melalui enkripsi dan kontrol akses.
+* **Integritas (Integrity)**: Memastikan data tetap akurat dan tidak dimodifikasi oleh pihak yang tidak berwenang melalui validasi input.
+* **Ketersediaan (Availability)**: Memastikan sistem dan data dapat diakses oleh pengguna yang berwenang kapan pun dibutuhkan.
+
+---
+
+## Lingkungan Implementasi
+
+Sistem ini diimplementasikan dan diuji langsung pada lingkungan **macOS** dengan server lokal **`http://localhost`**, dan penggunaan database melalui **phpMyAdmin** yang telah dikonfigurasi secara aman.
+
+---
